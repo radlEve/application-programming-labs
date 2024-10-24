@@ -1,13 +1,19 @@
 import argparse
 import re
 
-def arg_parser() -> tuple:
+
+def arg_parser() -> tuple[str, str, str]:
+    """
+    Парсинг аргументов командной строки
+    :return: кортеж из названия читаемого файла, искомого пола и буквы
+    """
     parser = argparse.ArgumentParser()
-    parser.add_argument('FileName', type=str, help='name of file')
+    parser.add_argument('file_name', type=str, help='name of file')
     parser.add_argument('gender', type=str, help='the desired gender')
     parser.add_argument('letter', type=str, help='the desired letter')
     args = parser.parse_args()
-    return args.FileName, args.gender, args.letter
+    return args.file_name, args.gender, args.letter
+
 
 def file_read(file_name: str) -> str:
     """
@@ -16,10 +22,15 @@ def file_read(file_name: str) -> str:
     try:
         with open(file_name, 'r', encoding = 'utf-8') as file:
             return file.read()
-    except Exception: raise ValueError("Файл не найден: проверьте имя файла!")
+    except FileNotFoundError:
+        raise ValueError("Файл не найден: проверьте имя файла!")
+    except PermissionError:
+        raise PermissionError("Недостаточно прав для чтения файла!")
+    except Exception as ex:
+        raise Exception(ex)
 
 
-def split(string: str) -> list:
+def split(string: str) -> list[str]:
     """
     Разделить строку string, записанную в формате "1)1текст2)2текст3)текст..." на список из элементов
     ['1текст', '2текст', '3текст']
@@ -28,7 +39,8 @@ def split(string: str) -> list:
     listed = re.split(pattern, string)
     return listed[1::]
 
-def find(text: str, gender: str, letter: str) -> list:
+
+def find(text: str, gender: str, letter: str) -> list[str]:
     """
     Найти в тексте имена, удовлетворяющие условию
     :param text: неразделенный текст, содержащий всё
@@ -46,12 +58,16 @@ def find(text: str, gender: str, letter: str) -> list:
                 suitableness.add(re.search(r'Имя:\s\w*', profile).group()[5::])
     return list(suitableness)
 
+
 def main():
     try:
-        FileName, gender, letter = arg_parser()
-        data = file_read(FileName)
+        file_name, gender, letter = arg_parser()
+        data = file_read(file_name)
         answer = find(data, gender, letter)
         print(answer)
-    except ValueError as ve: print(f"Something went wrong: \"{ve}\"")
+    except Exception as ex:
+        print(f"Что-то пошло не так: \"{ex}\"")
+
+
 if __name__ == '__main__':
     main()
