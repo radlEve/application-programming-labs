@@ -1,6 +1,14 @@
 import argparse
 import re
 
+def arg_parser() -> tuple:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('FileName', type=str, help='name of file')
+    parser.add_argument('gender', type=str, help='the desired gender')
+    parser.add_argument('letter', type=str, help='the desired letter')
+    args = parser.parse_args()
+    return args.FileName, args.gender, args.letter
+
 def file_read(file_name: str) -> str:
     """
     Прочесть файл и вернуть его в виде строки
@@ -8,10 +16,9 @@ def file_read(file_name: str) -> str:
     try:
         with open(file_name, 'r', encoding = 'utf-8') as file:
             return file.read()
-    except FileNotFoundError:
-        raise ValueError("Файл не найден: проверьте имя файла!")
-    except IOError:
-        raise ValueError("Ошибка при чтении файла: проверьте доступность файла!")
+    except Exception: raise ValueError("Файл не найден: проверьте имя файла!")
+
+
 def split(string: str) -> list:
     """
     Разделить строку string, записанную в формате "1)1текст2)2текст3)текст..." на список из элементов
@@ -20,6 +27,7 @@ def split(string: str) -> list:
     pattern = r'\d+\)'
     listed = re.split(pattern, string)
     return listed[1::]
+
 def find(text: str, gender: str, letter: str) -> list:
     """
     Найти в тексте имена, удовлетворяющие условию
@@ -39,13 +47,11 @@ def find(text: str, gender: str, letter: str) -> list:
     return list(suitableness)
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('FileName', type=str, help='name of file')
-    parser.add_argument('gender', type=str, help='the desired gender')
-    parser.add_argument('letter', type=str, help='the desired letter')
-    args = parser.parse_args()
-    data = file_read(args.FileName)
-    answer = find(data, args.gender, args.letter)
-    print(answer)
+    try:
+        FileName, gender, letter = arg_parser()
+        data = file_read(FileName)
+        answer = find(data, gender, letter)
+        print(answer)
+    except ValueError as ve: print(f"Something went wrong: \"{ve}\"")
 if __name__ == '__main__':
     main()
