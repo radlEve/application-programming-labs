@@ -3,32 +3,30 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def print_img_size(image: str) -> None:
+def print_img_size(img: np.ndarray) -> None:
     """
     Выводит разрешение изображения в консоль
-    :param image: изображение, размер которого необходимо вывести
+    :param img: изображение в формате массива Numpy
     :return: None
     """
     try:
-        image_data = cv2.imread(image)
-        if image_data is None:
-            raise ValueError(f"Не удалось загрузить изображение \"{image}\"")
-        print(f'Height: {image_data.shape[0]}, width: {image_data.shape[1]}')
+        if img is None:
+            raise ValueError(f"Не удалось загрузить изображение")
+        print(f'Height: {img.shape[0]}, width: {img.shape[1]}')
 
     except Exception as e:
-        print(f"Ошибка: {e}")
+        raise ValueError(f"Ошибка: {e}")
 
 
-def show_hist_im(image: str) -> None:
+def show_hist_im(img: np.ndarray) -> None:
     """
     Строит и показывает гистограмму изображения (по 3 цветам)
-    :param image: изображение, по которому строится гистограмма
+    :param img: изображение в формате массива NumPy
     :return: None
     """
     try:
-        img = cv2.imread(image)
         if img is None:
-            raise ValueError(f"Не удалось загрузить изображение \"{image}\"")
+            raise ValueError(f"Не удалось загрузить изображение")
         color = ('b', 'g', 'r')
         for i, col in enumerate(color):
             histr = cv2.calcHist([img], [i], None, [256], [0, 256])
@@ -38,8 +36,9 @@ def show_hist_im(image: str) -> None:
         plt.ylabel('No. of pixels')
         plt.grid(color='gray', linestyle='--', linewidth=0.5)
         plt.show()
+
     except Exception as e:
-        print(f"Ошибка: {e}")
+        raise ValueError(f"Ошибка: {e}")
 
 
 def show_four_im(image1_path: str, description1: str, image2_path: str, description2: str,
@@ -74,23 +73,23 @@ def show_four_im(image1_path: str, description1: str, image2_path: str, descript
             plt.axis('off')
             plt.title([description1, description2, description3, description4][i])
         plt.show()
+
     except Exception as e:
-        print(f"Ошибка: {e}")
+        raise ValueError(f"Ошибка: {e}")
 
 
-def split_image(image: str, save_folder: str) -> None:
+def split_image(img: np.ndarray, save_folder: str) -> None:
     """
     Разделяет изображение на 3 канала и сохраняет каждый канал
     в отдельный файл по указанному пути
-    :param image: исходное изображение
+    :param img: исходное изображение в формате массива Numpy
     :param save_folder: путь к папке, в которую необходимо сохранить
     изображение, разделенное по каналам
     :return: None
     """
     try:
-        img = cv2.imread(image)
         if img is None:
-            raise ValueError(f"Не удалось загрузить изображение \"{image}\"")
+            raise ValueError(f"Не удалось загрузить изображение")
 
         img_b = np.zeros_like(img)
         img_g = np.zeros_like(img)
@@ -102,5 +101,6 @@ def split_image(image: str, save_folder: str) -> None:
         cv2.imwrite(save_folder + 'imageB.png', img_b)
         cv2.imwrite(save_folder + 'imageG.png', img_g)
         cv2.imwrite(save_folder + 'imageR.png', img_r)
+
     except Exception as e:
-        print(f"Ошибка: {e}")
+        raise ValueError(f"Ошибка: {e}")

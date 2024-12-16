@@ -18,15 +18,20 @@ def arg_parser() -> tuple[str, str]:
 
 
 def main():
-    image_path, save_folder = arg_parser()
-    show_hist_im(image_path)
-    print_img_size(image_path)
-    split_image(image_path, save_folder)
-    show_four_im(image_path, 'original image',
-                 save_folder + 'imageB.png', 'blue',
-                 save_folder + 'imageG.png', 'green',
-                 save_folder + 'imageR.png', 'red')
+    try:
+        image_path, save_folder = arg_parser()
+        img = cv2.imread(image_path)
 
+        show_hist_im(img)
+        print_img_size(img)
+        split_image(img, save_folder)
+        show_four_im(image_path, 'original image',
+                     save_folder + 'imageB.png', 'blue',
+                     save_folder + 'imageG.png', 'green',
+                     save_folder + 'imageR.png', 'red')
+
+    except Exception as ex:
+        print(f"Что-то пошло не так: \"{ex}\"")
 
 if __name__ == '__main__':
     main()
