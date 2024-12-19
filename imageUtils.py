@@ -42,7 +42,7 @@ def show_hist_im(img: np.ndarray) -> None:
     except ValueError:
         raise ValueError("Не удалось загрузить изображение")
     except Exception as e:
-        raise ValueError(f"Ошибка: {e}")
+        raise Exception(f"Ошибка: {e}")
 
 
 def show_four_im(image1_path: str, description1: str, image2_path: str, description2: str,
@@ -81,7 +81,7 @@ def show_four_im(image1_path: str, description1: str, image2_path: str, descript
     except ValueError as ve:
         raise ValueError(ve)
     except Exception as e:
-        raise ValueError(f"Ошибка: {e}")
+        raise Exception(f"Ошибка: {e}")
 
 
 def split_image(img: np.ndarray, save_folder: str) -> None:
@@ -111,4 +111,4 @@ def split_image(img: np.ndarray, save_folder: str) -> None:
     except ValueError:
         raise ValueError("Не удалось загрузить изображение")
     except Exception as e:
-        raise ValueError(f"Ошибка: {e}")
+        raise Exception(f"Ошибка: {e}")
