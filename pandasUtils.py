@@ -14,9 +14,9 @@ def create_dataframe(csv_file: str) -> pd.DataFrame:
         df.columns = ['absolute_path', 'relative_path']
         return df
     except FileNotFoundError as e:
-        raise ValueError(f'Файл не найден: {e}')
+        raise FileNotFoundError(f'Файл не найден: {e}')
     except Exception as e:
-        raise ValueError(f"Ошибка при чтении CSV: {e}")
+        raise Exception(f"Ошибка при чтении CSV: {e}")
 
 
 def add_img_specs(df: pd.DataFrame) -> None:
@@ -29,7 +29,7 @@ def add_img_specs(df: pd.DataFrame) -> None:
         df[['height', 'width', 'channels']] = df['absolute_path'].apply(lambda x: pd.Series(get_image_specs(x)))
         df['area'] = df['height'] * df['width']
     except Exception as e:
-        raise RuntimeError(f'Не удалось получить  характеристики изображения: {e}')
+        raise Exception(f'Не удалось получить характеристики изображения: {e}')
 
 
 def get_stats(df: pd.DataFrame) -> pd.DataFrame:

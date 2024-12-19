@@ -53,7 +53,7 @@ def main():
         print(df.head())
 
         print("\n6. Построение гистограммы...")
-        show_hist(df)
+        show_hist(df['area'])
         print("   Гистограмма построена и отображена.")
 
     except Exception as ex:
