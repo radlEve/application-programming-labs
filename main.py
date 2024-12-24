@@ -1,4 +1,5 @@
 import sys
+
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QPushButton, QLabel,
                              QFileDialog, QVBoxLayout, QWidget)
 from PyQt6.QtGui import QPixmap
@@ -46,6 +47,7 @@ class MainWindow(QMainWindow):
                     self.image_label.setText("Изображения отсутствуют")
                     self.iterator = None
                 else:
+                    self.next_button.setDisabled(False)
                     self.show_next_image()
             except ValueError as e:
                 self.image_label.setText(f"Ошибка: {e}")
@@ -53,6 +55,7 @@ class MainWindow(QMainWindow):
 
     def show_next_image(self) -> None:
         if not self.iterator:
+            self.next_button.setDisabled(True)
             self.image_label.setText("Папка не выбрана")
             return  # Завершаем функцию если итератора нет
         try:
@@ -61,6 +64,7 @@ class MainWindow(QMainWindow):
             self.image_label.setPixmap(pixmap.scaled(self.image_label.size(),
                                                     Qt.AspectRatioMode.KeepAspectRatio))
         except StopIteration:
+            self.next_button.setDisabled(True)
             self.image_label.setText("Больше изображений нет")
 
 
